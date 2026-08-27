@@ -47,9 +47,9 @@
 
   # Remote-Builder: erlaubt Build-Jobs von anderen Maschinen, z. B.
   #   nixos-rebuild switch --flake .#xiaomi-begonia \
-  #     --target-host root@begonia --build-host nx@nixda
-  # (oder per builders = "ssh://nx@nixda aarch64-linux" im nix.conf des Clients)
-  nix.settings.trusted-users = [ "nx" ];
+  #     --target-host root@begonia --build-host mal-2@nixda
+  # (oder per builders = "ssh://mal-2@nixda aarch64-linux" im nix.conf des Clients)
+  nix.settings.trusted-users = [ "mal-2" ];
 
   # Xiaomi ist per USB-Tethering (Ethernet over USB) angeschlossen:
   # Auf dem Handy "USB-Tethering" aktivieren → Interface usb0.

@@ -1,4 +1,4 @@
-# Home Manager Config für den Desktop-User (nx) auf tsathoggua
+# Home Manager Config für den Desktop-User (admin) auf tsathoggua
 # Doku: https://nix-community.github.io/home-manager/
 {
   config,

@@ -47,7 +47,8 @@
     settings = {
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
-      PermitRootLogin = "no";
+      # Root nur per Key (Notfall-Zugang, users.users.root weiter unten)
+      PermitRootLogin = "prohibit-password";
     };
   };
 
@@ -71,16 +72,22 @@
     wget
   ];
 
-  users.users.nx = {
+  users.users.root = {
+    hashedPassword = "$6$KZBEAY3J2lXDbC7z$RTuMDY/h3Z0MdTv9In3ROjLA3VNGHU466CeiQ1VRCw8yG/QMNF49ePcR0mQacjhGdccKqyXHGI4kNQaBxwui91";
+    openssh.authorizedKeys.keys = [
+      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIE0eEEBd//xMxb9O3662lYYnKN2o8Q4BJh0NSbMVoSfIAAAACHNzaDpyb290 root@tsathoggua"
+    ];
+  };
+  users.users.mal-2 = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     # TODO: Nach dem ersten Login ändern oder (besser) durch
     #   hashedPasswordFile (sops-nix) ersetzen:
-    initialPassword = "changeme";
+    hashedPassword = "$6$oWKuDcrn.LTNURux$y2gw3lxUBdpzgZ2/8qZM3eSCFRBglB.aV3vcFs5QZWc3oV89Tr1fvq5L2z5wXMSDLPfIxVsl6DZ4RYZWrVqn.1";
     # TODO: Vor dem ersten headless Deploy einen echten Key hinterlegen,
     # SSH-Login ist nur per Key erlaubt!
     openssh.authorizedKeys.keys = [
-      # "ssh-ed25519 AAAAC3Nza... nx@tsathoggua"
+      "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIDzz6cca0kfmFeCToPefLxVabxkMNVia9yPeutsoZyuKAAAACXNzaDptYWwtMg== mal-2@tsathoggua"
     ];
   };
 

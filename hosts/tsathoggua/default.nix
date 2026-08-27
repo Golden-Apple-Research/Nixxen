@@ -19,7 +19,7 @@
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.users.nx = import ./home.nix;
+      home-manager.users.mal-2 = import ./home.nix;
     }
   ];
 

@@ -35,13 +35,13 @@ nix build .#packages.x86_64-linux.xiaomi-begonia-kernel
 
 # Komplettes System remote auf nixda bauen und auf das Handy deployen:
 nixos-rebuild switch --flake .#xiaomi-begonia \
-  --target-host root@begonia --build-host nx@nixda
+  --target-host root@begonia --build-host mal-2@nixda
 ```
 
 Alternativ nixda als distributed Builder eintragen (Client `nix.conf`):
 
 ```
-builders = ssh://nx@nixda x86_64-linux,aarch64-linux
+builders = ssh://mal-2@nixda x86_64-linux,aarch64-linux
 ```
 
 #### Xiaomi: Installation vom laufenden pmOS
