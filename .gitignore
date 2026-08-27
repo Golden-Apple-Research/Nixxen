@@ -1,0 +1,6 @@
+# Nix build Artefakte
+result
+result-*
+# Direnv
+.direnv
+.envrc

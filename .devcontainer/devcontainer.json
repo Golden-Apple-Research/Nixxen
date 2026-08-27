@@ -1,0 +1,12 @@
+{
+  "image": "localhost/ubuntu-omni-pi:latest",
+  "remoteEnv": {
+    // API-Keys vom Host durchreichen, statt sie im Container zu hinterlegen:
+    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}"
+  },
+  "customizations": {
+    "zed": {
+      "extensions": ["nix", "json5", "lua"]
+    }
+  }
+}
