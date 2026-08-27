@@ -51,6 +51,17 @@
   # (oder per builders = "ssh://mal-2@nixda aarch64-linux" im nix.conf des Clients)
   nix.settings.trusted-users = [ "mal-2" ];
 
+  # GitHub-Zugriff (privates Nixxen-Repo) über die Host-Identität: der
+  # ed25519-Host-Key ist als read-only Deploy-Key bei GitHub registriert.
+  # → Kanonische Datei, kein anonymer State-Key in /etc/ssh.
+  # Achtung: regeneriert sich der Host-Key (Neuinstallation/Impermanence),
+  # muss der Deploy-Key in GitHub neu registriert werden.
+  environment.etc."ssh/ssh_config.d/github-deploy.conf".text = ''
+    Host github.com
+      IdentityFile /etc/ssh/ssh_host_ed25519_key
+      IdentitiesOnly yes
+  '';
+
   # Xiaomi ist per USB-Tethering (Ethernet over USB) angeschlossen:
   # Auf dem Handy "USB-Tethering" aktivieren → Interface usb0.
   # Standardmäßig holt sich jeder Interface per DHCP eine Adresse.

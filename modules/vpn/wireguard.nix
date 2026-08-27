@@ -91,12 +91,11 @@ in
           ];
     };
 
-    # Server: WG-Port von außen erreichbar machen
-    networking.firewall = lib.mkIf (cfg.role == "server") {
-      allowedUDPPorts = [ cfg.listenPort ];
-      # VXLAN zwischen den Nodes läuft dann getunnelt über wg0
+    networking.firewall = {
+      # Server: WG-Port von außen erreichbar machen
+      allowedUDPPorts = lib.mkIf (cfg.role == "server") [ cfg.listenPort ];
+      # Overlay-Verkehr ist vertrauenswürdig (VXLAN läuft getunnelt über wg0)
       trustedInterfaces = [ "wg0" ];
     };
-    networking.firewall.trustedInterfaces = lib.mkIf (cfg.role == "client") [ "wg0" ];
   };
 }
