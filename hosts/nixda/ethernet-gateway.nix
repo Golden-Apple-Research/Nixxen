@@ -1,6 +1,14 @@
 { config, lib, pkgs, ... }:
 
 {
+  # --- Haupt-LAN (eno1): expliziter DHCP unter networkd ---
+  # networking.useDHCP=true allein erzeugt unter networkd KEINE .network-
+  # Datei – ohne diesen Block hätte eno1 keinen DHCP-Client.
+  systemd.network.networks."10-lan" = {
+    matchConfig.Name = "eno1";
+    networkConfig.DHCP = "yes";
+  };
+
   # --- USB-Networking für postmarketOS-Geräte (172.16.42.x) ---
   systemd.network.networks."20-pmos-usb" = {
     matchConfig.Name = "en*u* usb*";
