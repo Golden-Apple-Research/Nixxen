@@ -4,10 +4,11 @@
 # (funktioniert damit auch hinter NAT, PersistentKeepalive hält die Verbindung).
 # k3s läuft dann komplett über wg0 (siehe --flannel-iface in den k3s-Modulen).
 #
-# Keys erzeugen:
-#   nix-shell -p wireguard-tools --run 'wg genkey | tee privatekey | wg pubkey'
-# Private Keys gehören idealerweise in sops-nix; für den Skeleton als
-# Platzhalter per File unter /var/lib/secrets/wireguard/.
+# Der Private Key wird pro Host einmalig erzeugt und liegt persistent unter
+# /etc/wireguard/wg0.key (Service "wireguard-key", vor networkd).
+# PubKey für die Gegenseite auslesen:
+#   sudo cat /etc/wireguard/wg0.key | wg pubkey
+# Später sauberer: per sops-nix ausrollen.
 {
   config,
   lib,
@@ -72,9 +73,9 @@ in
       inherit (cfg) listenPort;
       ips = [ cfg.address ];
 
-      # TODO: privaten Key per sops-nix ausrollen, z. B.:
-      #   privateKeyFile = "/run/secrets/wireguard_private";
-      generatePrivateKeyFile = true;
+      # Mit networkd muss der Key als Datei vorliegen (generatePrivateKeyFile
+      # geht dort nicht). Erzeugung beim ersten Aktivieren, danach persistent:
+      privateKeyFile = "/etc/wireguard/wg0.key";
 
       peers =
         if cfg.role == "server" then
@@ -89,6 +90,28 @@ in
               persistentKeepalive = 25;
             }
           ];
+    };
+
+    # Key einmalig erzeugen (persistent), falls noch nicht vorhanden.
+    # PubKey danach auslesen:
+    #   sudo cat /etc/wireguard/wg0.key | wg pubkey
+    systemd.services.wireguard-key = {
+      description = "WireGuard Private Key für wg0";
+      wantedBy = [ "multi-user.target" ];
+      before = [ "systemd-networkd.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+      };
+      script = ''
+        if [ ! -s /etc/wireguard/wg0.key ]; then
+          mkdir -p /etc/wireguard
+          chmod 700 /etc/wireguard
+          ${pkgs.wireguard-tools}/bin/wg genkey > /etc/wireguard/wg0.key
+          chmod 600 /etc/wireguard/wg0.key
+          echo "wireguard: neuen Private Key für wg0 erzeugt"
+        fi
+      '';
     };
 
     networking.firewall = {
