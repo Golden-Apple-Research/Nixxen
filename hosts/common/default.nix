@@ -64,12 +64,14 @@
 
   environment.systemPackages = with pkgs; [
     btop
+    tmux
     curl
     git
     htop
     ripgrep
     vim
     wget
+
   ];
 
   users.users.root = {

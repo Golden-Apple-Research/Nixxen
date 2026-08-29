@@ -27,7 +27,7 @@
   networking.networkmanager.enable = true;
 
   environment.systemPackages = with pkgs; [
-    alacritty
+    kitty
     brightnessctl
     fuzzel
     hyprpaper
