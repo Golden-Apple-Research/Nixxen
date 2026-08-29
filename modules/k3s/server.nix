@@ -17,9 +17,10 @@
       # Pod-Netzwerk durch das WireGuard-Overlay
       "--flannel-iface=wg0"
       # HA-Setup mit eingebettetem etcd, falls später weitere Server dazukommen:
-      # "--cluster-init"
+      "--cluster-init"
       # Eigenen Ingress statt Traefik, falls gewünscht:
       # "--disable=traefik"
+      "--tls-san=nixda.home.arpa"
     ];
 
     # Node-Token für die Agenten auslesen (auf nixda):
@@ -34,11 +35,13 @@
     allowedTCPPorts = [
       6443 # Kubernetes API
       10250 # Kubelet
+      2379 # etcd
+      2380 # etcd
     ];
     allowedUDPPorts = [
       8472 # Flannel VXLAN
+      51820 # wg
+      51821 # wg
     ];
-    # Bei cluster-init zusätzlich: TCP 2379 2380 (etcd)
-    # Bei Wireguard-Backend (canal): UDP 51820 51821
   };
 }
