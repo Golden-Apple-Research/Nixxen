@@ -37,6 +37,8 @@
       10250 # Kubelet
       2379 # etcd
       2380 # etcd
+      80 # http
+      443 # https
     ];
     allowedUDPPorts = [
       8472 # Flannel VXLAN
