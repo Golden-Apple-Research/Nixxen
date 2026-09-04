@@ -44,13 +44,13 @@ in
     # --- server ---
     peers = lib.mkOption {
       type = lib.types.listOf lib.types.attrs;
-      default = [ "worker-1" ];
+      default = [ ];
       description = ''
         Worker-Peers: [{ publicKey, allowedIPs }].
       '';
-      worker-1 = [
+      example = [
         {
-          publicKey = "RPuqsBfb5XWIWlNZhIW88+oB/u0Jdn5a1X95XgcnA38=";
+          publicKey = "wGh7…=";
           allowedIPs = [ "10.42.7.2/32" ];
         }
       ];
@@ -64,7 +64,7 @@ in
 
     serverPublicKey = lib.mkOption {
       type = lib.types.str;
-      default = "1WNZ3ny64CRPKEoXmoxM9Y2M7d83KzeCPf9HkrHMAyw=";
+      default = "TODO-PUBKEY-NIXDA";
     };
   };
 
