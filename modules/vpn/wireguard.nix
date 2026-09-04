@@ -44,7 +44,7 @@ in
     # --- server ---
     peers = lib.mkOption {
       type = lib.types.listOf lib.types.attrs;
-      default = [ ];
+      default = [ "worker-1" ];
       description = ''
         Worker-Peers: [{ publicKey, allowedIPs }].
       '';
