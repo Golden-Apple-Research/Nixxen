@@ -48,7 +48,7 @@ in
       description = ''
         Worker-Peers: [{ publicKey, allowedIPs }].
       '';
-      worker-1= [
+      worker-1 = [
         {
           publicKey = "RPuqsBfb5XWIWlNZhIW88+oB/u0Jdn5a1X95XgcnA38=";
           allowedIPs = [ "10.42.7.2/32" ];
