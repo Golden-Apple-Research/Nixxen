@@ -48,9 +48,9 @@ in
       description = ''
         Worker-Peers: [{ publicKey, allowedIPs }].
       '';
-      example = [
+      worker-1= [
         {
-          publicKey = "wGh7…=";
+          publicKey = "RPuqsBfb5XWIWlNZhIW88+oB/u0Jdn5a1X95XgcnA38=";
           allowedIPs = [ "10.42.7.2/32" ];
         }
       ];
@@ -64,7 +64,7 @@ in
 
     serverPublicKey = lib.mkOption {
       type = lib.types.str;
-      default = "TODO-PUBKEY-NIXDA";
+      default = "1WNZ3ny64CRPKEoXmoxM9Y2M7d83KzeCPf9HkrHMAyw=";
     };
   };
 
