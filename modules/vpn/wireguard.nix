@@ -33,7 +33,7 @@ in
 
     address = lib.mkOption {
       type = lib.types.str;
-      description = "Eigene Adresse im Overlay, z. B. 10.42.7.1/24.";
+      description = "Eigene Adresse im Overlay, z. B. 10.142.7.1/24.";
     };
 
     listenPort = lib.mkOption {
@@ -51,7 +51,7 @@ in
       example = [
         {
           publicKey = "wGh7…=";
-          allowedIPs = [ "10.42.7.2/32" ];
+          allowedIPs = [ "10.142.7.2/32" ];
         }
       ];
     };
@@ -84,7 +84,7 @@ in
           [
             {
               publicKey = cfg.serverPublicKey;
-              allowedIPs = [ "10.42.7.0/24" ];
+              allowedIPs = [ "10.142.7.0/24" ];
               endpoint = cfg.endpoint;
               # Handy/Pi hinter NAT: hält den Tunnel offen
               persistentKeepalive = 25;

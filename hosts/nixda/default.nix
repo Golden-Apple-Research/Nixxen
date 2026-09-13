@@ -32,13 +32,13 @@
   services.nixxen.wireguard = {
     enable = true;
     role = "server";
-    address = "10.42.7.1/24";
+    address = "10.142.7.1/24";
     peers = [
       # { publicKey = "…"; allowedIPs = [ "10.42.7.2/32" ]; }  # rpi4-4g
       # { publicKey = "…"; allowedIPs = [ "10.42.7.3/32" ]; }  # rpi4-8g
       {
         publicKey = "RPuqsBfb5XWIWlNZhIW88+oB/u0Jdn5a1X95XgcnA38=";
-        allowedIPs = [ "10.42.7.2/32" ];
+        allowedIPs = [ "10.142.7.2/32" ];
       }
     ];
   };

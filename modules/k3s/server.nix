@@ -18,8 +18,7 @@
       "--flannel-iface=wg0"
       # HA-Setup mit eingebettetem etcd, falls später weitere Server dazukommen:
       "--cluster-init"
-      # Eigenen Ingress statt Traefik, falls gewünscht:
-      # "--disable=traefik"
+      "--disable=traefik" # wird durch cilium ersetzt
       "--tls-san=nixda.home.arpa"
     ];
 

@@ -32,6 +32,8 @@
     ];
     allowedUDPPorts = [
       8472 # Flannel VXLAN
+      51820 # wg
+      51821 # wg
     ];
   };
 }
