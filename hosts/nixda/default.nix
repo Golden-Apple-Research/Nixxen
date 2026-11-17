@@ -14,6 +14,9 @@
     ./ethernet-gateway.nix
     ../../modules/k3s/server.nix
     ../../modules/vpn/wireguard.nix
+    # NAT64/DNS64: der Cluster ist Single-Stack IPv6, IPv4-only-Ziele
+    # (ghcr.io, github.com, Supabase-Pooler) brauchen Übersetzung.
+    ../../modules/networking/nat64-dns64.nix
   ];
 
   networking.hostName = "nixda";

@@ -21,19 +21,29 @@
     # TODO: per sops-nix als Secret ausrollen (siehe README)
     tokenFile = lib.mkDefault "/var/lib/secrets/k3s/token";
 
-    # Bei WireGuard-Overlay (modules/vpn/wireguard.nix): Pod-Netzwerk durch
-    # den Tunnel legen statt über das physische Netz
-    extraFlags = lib.mkDefault "--flannel-iface=wg0";
+    # Kein flannel mehr (Cilium, siehe modules/k3s/server.nix).
+    #
+    # Single-Stack IPv6: jeder Agent braucht seine eigene IPv6 als node-ip,
+    # sonst nimmt das kubelet IPv4 als primäre Familie. Pro Host setzen:
+    #   services.k3s.extraFlags = lib.mkForce
+    #     "--node-ip=2a02:21b4:8c69:6300:<iid>";
+    extraFlags = lib.mkDefault "";
   };
 
   networking.firewall = {
     allowedTCPPorts = [
       10250 # Kubelet
+      4240 # Cilium health
     ];
     allowedUDPPorts = [
-      8472 # Flannel VXLAN
       51820 # wg
       51821 # wg
     ];
+    # 8472/udp (Flannel VXLAN) entfällt — Cilium, routingMode=native.
+    # forward-chain hat policy drop: Cilium-veths explizit erlauben.
+    extraForwardRules = ''
+      iifname "lxc*" accept
+      oifname "lxc*" accept
+    '';
   };
 }
