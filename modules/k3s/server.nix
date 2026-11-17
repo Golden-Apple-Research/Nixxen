@@ -28,7 +28,10 @@
       "--cluster-cidr=2a02:21b4:8c69:6304::/62" # 4× /64 für Nodes
       "--service-cidr=2a02:21b4:8c69:6308::/112"
       "--cluster-dns=2a02:21b4:8c69:6308::a"
-      "--node-cidr-mask-size-ipv6=64"
+      # Kein --node-cidr-mask-size-ipv6: das ist ein
+      # kube-controller-manager-Flag (k3s kennt es nur via
+      # --kube-controller-manager-arg) und der Default für IPv6 ist /64 —
+      # passt zu cluster-cidr /62 (4× /64 für Nodes).
       # kubelet nimmt sonst IPv4 als primäre Familie
       "--node-ip=2a02:21b4:8c69:6300:9ae7:f4ff:febd:b6a2"
       "--kubelet-arg=node-ip=2a02:21b4:8c69:6300:9ae7:f4ff:febd:b6a2"
