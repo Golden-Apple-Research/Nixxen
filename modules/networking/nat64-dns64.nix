@@ -23,12 +23,39 @@ let
   nat64Prefix = "2a02:21b4:8c69:63ff::/96";
   nodeIPv6 = "2a02:21b4:8c69:6300:9ae7:f4ff:febd:b6a2";
   upstreamDNS = "2a02:21b4:8c69:6300::1"; # Mikrotik
+
+  # IPv4-Adresse des Hosts, mit der NAT64 die Quelladresse maskiert.
+  # TODO: auf nixda die Adresse von eno1 eintragen (`ip -4 addr show eno1`).
+  nat64Pool4 = "10.42.7.1";
 in
 {
   # --- NAT64: IPv6-Pool, aus dem IPv4-Ziele erreichbar sind (RFC 6052) ---
-  services.jool.nat64.default = {
-    framework = "netfilter";
-    global.pool6 = nat64Prefix;
+  # Achtung: die Option heißt `networking.jool` (nicht `services.jool`).
+  networking.jool = {
+    enable = true;
+    nat64.default = {
+      framework = "netfilter";
+      global.pool6 = nat64Prefix;
+      # Ohne pool4 maskiert Jool nichts — die IPv4-Quelladresse muss aus
+      # diesem Pool kommen, sonst kommt der Rückweg nicht an.
+      pool4 = [
+        {
+          protocol = "TCP";
+          prefix = "${nat64Pool4}/32";
+          "port range" = "40001-65535";
+        }
+        {
+          protocol = "UDP";
+          prefix = "${nat64Pool4}/32";
+          "port range" = "40001-65535";
+        }
+        {
+          protocol = "ICMP";
+          prefix = "${nat64Pool4}/32";
+          "port range" = "40001-65535";
+        }
+      ];
+    };
   };
 
   # --- DNS64: liefert Pods AAAA-Records für IPv4-only-Namen ---
