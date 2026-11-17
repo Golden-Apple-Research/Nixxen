@@ -1,0 +1,76 @@
+# Cilium-Werte für den k3s-Erstaufbau (Single-Stack IPv6, Gateway API)
+#
+# Verwendung (auf nixda, VOR dem Flux-Bootstrap):
+#   cilium install --version 1.20.5 -f cilium-values.yaml
+#   cilium status --wait
+#
+# Hintergrund und Netzplan: k3s/PLAN-cilium-ipv6.md
+#
+# Später übernimmt Flux einen HelmRelease mit denselben Werten
+# (Release-Name `cilium`, Namespace `kube-system`) — dann ist diese Datei hier
+# nur noch die Erstinstallation bzw. das Referenz-Values-File.
+
+# --- Adressierung: nur IPv6, keine Übersetzung im Cluster -------------------
+ipv4:
+  enabled: false
+ipv6:
+  enabled: true
+# Pods behalten ihre globale Adresse (Entscheidung 2026-11-17).
+# Folge: der Mikrotik braucht Routen für 6304::/62, 6308::/112, 6309::/112.
+# Achtung: das Flag heißt in der Chart `enableIPv6Masquerade` (Default true),
+# nicht `ipv6.masquerade` — letzteres würde still ignoriert.
+enableIPv6Masquerade: false
+bpf:
+  masquerade: false
+
+# --- Datapath: nativ, kube-proxy ersetzt ------------------------------------
+routingMode: native
+ipv6NativeRoutingCIDR: 2a02:21b4:8c69:6304::/62
+
+kubeProxyReplacement: true
+# k3s-ApiServer ist ein lokaler Prozess; für weitere Nodes die ULA/IPv6 von
+# nixda eintragen (dieselbe Adresse wie --node-ip).
+k8sServiceHost: "2a02:21b4:8c69:6300:9ae7:f4ff:febd:b6a2"
+k8sServicePort: "6443"
+
+# k3s verteilt die PodCIDRs aus --cluster-cidr selbst.
+ipam:
+  mode: kubernetes
+
+# --- k3s-Besonderheiten -----------------------------------------------------
+cni:
+  # k3s legt die CNI-Configs nicht unter /etc/cni ab. Cilium erkennt k3s
+  # meist selbst, diese beiden Pfade sind der sichere Weg.
+  confPath: /var/lib/rancher/k3s/agent/etc/cni/net.d
+  binPath: /var/lib/rancher/k3s/data/current/bin
+
+# --- Gateway API (ersetzt Traefik) -----------------------------------------
+gatewayAPI:
+  enabled: true
+l7Proxy: true
+ingressController:
+  enabled: false
+
+# --- CPU-Budget: der Node läuft am Anschlag ---------------------------------
+# omnigent aus + Traefik weg schaffen Luft; Hubble bleibt aus, bis der Node
+# Reserve hat.
+hubble:
+  enabled: false
+
+operator:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+envoy:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
